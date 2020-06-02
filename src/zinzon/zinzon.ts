@@ -26,7 +26,7 @@ export type EventName =
   | 'CAPS';
 
 export interface IEvent {
-  name?: string;
+  name: string;
   bonusPoints: number;
   multiplicator?: number;
 }
