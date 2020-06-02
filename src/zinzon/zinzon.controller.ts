@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import {ZinzonService} from "./zinzon.service";
+import {IResult} from "./zinzon";
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+@Controller("zinzon")
+export class ZinzonController {
+  constructor(private readonly zinzonService: ZinzonService) {}
 
-  @Get("zinzon")
-  zinzonne(): string {
-    return this.appService.zinzonne();
+  @Get()
+  zinzone():  IResult {
+    return this.zinzonService.zinzonne();
   }
 }
