@@ -6,3 +6,6 @@ type Zinzon {
 type Query {
   zinzon : Zinzon
 }
+type Mutation {
+  setConfig(s : String!): String
+}
