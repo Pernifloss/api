@@ -1,0 +1,8 @@
+type Zinzon {
+  zinzon: String!
+  score: Float!
+  types: [String]!
+}
+type Query {
+  zinzon : Zinzon
+}
