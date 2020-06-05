@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket, MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -9,7 +10,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { ChatMessage } from './ChatMessage';
+import { ChatMessage, IChatMessage } from './ChatMessage';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -20,9 +21,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private logger: Logger = new Logger('ChatGateway');
 
   @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, payload: string): void {
+  handleMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: IChatMessage,
+  ): void {
     this.server.emit('msgToClient', payload);
-    this.chatService.GetUser(client.id).ChangeUserName(new ChatMessage(payload));
+
+    const message = new ChatMessage(payload);
+    this.chatService.GetUser(client.id).changeUserName(message);
   }
 
   afterInit(Server: Server): void {
@@ -31,8 +37,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   handleDisconnect(client: Socket): void {
     this.logger.log(`Client disconnected from chat: ${client.id}`);
-    const clientIndex = this.chatService.chatClients.findIndex(c => c.socket.id === client.id);
-    if (clientIndex >= 0) this.chatService.chatClients.splice(clientIndex, 1);
+    this.chatService.removeClient(client);
   }
 
   handleConnection(client: Socket): void {

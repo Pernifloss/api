@@ -17,4 +17,9 @@ export class ChatService {
   addClient(socket: Socket) : void {
     this.chatClients.push(new ChatClient(socket));
   }
+
+  removeClient(client: Socket) : void {
+    const clientIndex = this.chatClients.findIndex(c => c.socket.id === client.id);
+    if (clientIndex >= 0) this.chatClients.splice(clientIndex, 1);
+  }
 }

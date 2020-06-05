@@ -9,7 +9,7 @@ export class ChatClient {
     this.socket = socket;
   }
 
-  ChangeUserName(message: ChatMessage): void {
+  changeUserName(message: ChatMessage): void {
     if (!message) return;
     if (!message.userId) return;
     this.userId = message.userId;
